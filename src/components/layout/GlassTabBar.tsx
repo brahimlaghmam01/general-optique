@@ -6,7 +6,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // standalone @react-navigation/bottom-tabs package's types no longer match
 // what <Tabs tabBar> actually passes, so we source the type from here.
 import type { BottomTabBarProps } from 'expo-router/build/react-navigation/bottom-tabs';
-import { Calendar, Home, Package, User, type LucideIcon } from 'lucide-react-native';
+import { Calendar, Home, Package, ShoppingBag, User, type LucideIcon } from 'lucide-react-native';
 
 import { GlassContainer } from '@/components/ui/GlassContainer';
 import { useHaptics } from '@/hooks/useHaptics';
@@ -24,6 +24,7 @@ const TAB_CONFIG: Record<string, { label: string; icon: LucideIcon }> = {
   index: { label: 'Accueil', icon: Home },
   appointments: { label: 'Rendez-vous', icon: Calendar },
   orders: { label: 'Commandes', icon: Package },
+  boutique: { label: 'Boutique', icon: ShoppingBag },
   profile: { label: 'Profil', icon: User },
 };
 
