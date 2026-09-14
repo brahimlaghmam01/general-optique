@@ -3,6 +3,11 @@ import { typography, fontFamily } from './typography';
 import { spacing, radius } from './spacing';
 import { shadow } from './shadows';
 import { motion } from './motion';
+import {
+  FLOATING_TAB_BAR_HEIGHT,
+  FLOATING_TAB_BAR_MIN_BOTTOM_OFFSET,
+  FLOATING_TAB_BAR_SAFE_AREA_GAP,
+} from './layout';
 
 export const theme = {
   colors,
@@ -12,9 +17,19 @@ export const theme = {
   radius,
   shadow,
   motion,
+  layout: {
+    floatingTabBarHeight: FLOATING_TAB_BAR_HEIGHT,
+    floatingTabBarMinBottomOffset: FLOATING_TAB_BAR_MIN_BOTTOM_OFFSET,
+    floatingTabBarSafeAreaGap: FLOATING_TAB_BAR_SAFE_AREA_GAP,
+  },
 } as const;
 
 export type Theme = typeof theme;
 
 export { colors, typography, fontFamily, spacing, radius, shadow, motion };
 export { useMotionPreset, type MotionPreset } from './motion';
+export {
+  FLOATING_TAB_BAR_HEIGHT,
+  FLOATING_TAB_BAR_MIN_BOTTOM_OFFSET,
+  FLOATING_TAB_BAR_SAFE_AREA_GAP,
+} from './layout';

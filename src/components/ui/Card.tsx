@@ -64,8 +64,10 @@ export const Card = forwardRef<View, CardProps>(function Card(
       accessibilityRole="button"
       {...viewProps}
     >
-      <Animated.View style={[elevatedStyle, animatedStyle]} className={containerClassName}>
-        {children}
+      {/* className must live on a plain View, not alongside an animated `style` on the
+          same Animated.View — see src/theme/nativewindInterop.ts. */}
+      <Animated.View style={[elevatedStyle, animatedStyle]}>
+        <View className={containerClassName}>{children}</View>
       </Animated.View>
     </Pressable>
   );

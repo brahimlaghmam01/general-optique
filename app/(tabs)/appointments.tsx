@@ -13,10 +13,13 @@ import { BottomSheet } from '@/components/ui/BottomSheet';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { mockStores } from '@/constants/mockData';
+import { useTabBarContentInset } from '@/hooks/useTabBarContentInset';
 import { useAppointmentStore } from '@/stores/appointmentStore';
+import { spacing } from '@/theme/spacing';
 
 export default function RendezVousScreen() {
   const router = useRouter();
+  const tabBarInset = useTabBarContentInset();
   const appointment = useAppointmentStore((state) => state.appointment);
   const storeId = useAppointmentStore((state) => state.storeId);
   const cancelAppointment = useAppointmentStore((state) => state.cancelAppointment);
@@ -33,7 +36,12 @@ export default function RendezVousScreen() {
     <SafeAreaView edges={['top']} className="flex-1 bg-background-primary">
       <ScrollView
         className="flex-1"
-        contentContainerClassName="gap-8 px-6 pb-36 pt-6"
+        contentContainerStyle={{
+          gap: spacing['3xl'],
+          paddingHorizontal: spacing['2xl'],
+          paddingTop: spacing['2xl'],
+          paddingBottom: tabBarInset,
+        }}
         showsVerticalScrollIndicator={false}
       >
         <AppointmentsHeader />

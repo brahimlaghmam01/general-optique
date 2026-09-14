@@ -18,8 +18,10 @@ import {
   getHomeSecondaryContexts,
   type HomePrimaryContext,
 } from '@/lib/utils/homeContext';
+import { useTabBarContentInset } from '@/hooks/useTabBarContentInset';
 import { useAppointmentStore } from '@/stores/appointmentStore';
 import { colors } from '@/theme/colors';
+import { spacing } from '@/theme/spacing';
 
 const REFRESH_DURATION_MS = 1000;
 
@@ -65,6 +67,7 @@ function getSecondaryRowContent(
 export default function AccueilScreen() {
   const router = useRouter();
   const [refreshing, setRefreshing] = useState(false);
+  const tabBarInset = useTabBarContentInset();
   const appointment = useAppointmentStore((state) => state.appointment);
 
   const onRefresh = useCallback(() => {
@@ -105,7 +108,12 @@ export default function AccueilScreen() {
     <SafeAreaView edges={['top']} className="flex-1 bg-background-primary">
       <ScrollView
         className="flex-1"
-        contentContainerClassName="gap-8 px-6 pb-36 pt-6"
+        contentContainerStyle={{
+          gap: spacing['3xl'],
+          paddingHorizontal: spacing['2xl'],
+          paddingTop: spacing['2xl'],
+          paddingBottom: tabBarInset,
+        }}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl
@@ -121,7 +129,7 @@ export default function AccueilScreen() {
           onPressAvatar={() => router.push('/profile')}
         />
 
-        <SearchSection />
+        <SearchSection onPressFilters={() => {}} />
 
         <PrimaryContextCard
           context={primaryContext}

@@ -10,7 +10,13 @@ import { Calendar, Home, Package, User, type LucideIcon } from 'lucide-react-nat
 
 import { GlassContainer } from '@/components/ui/GlassContainer';
 import { useHaptics } from '@/hooks/useHaptics';
+import { useTabBarGeometryStore } from '@/stores/tabBarGeometryStore';
 import { colors } from '@/theme/colors';
+import {
+  FLOATING_TAB_BAR_HEIGHT,
+  FLOATING_TAB_BAR_MIN_BOTTOM_OFFSET,
+  FLOATING_TAB_BAR_SAFE_AREA_GAP,
+} from '@/theme/layout';
 import { shadow } from '@/theme/shadows';
 import { SPRING_PRESS, SPRING_TAB_INDICATOR } from '@/theme/motion';
 
@@ -21,7 +27,7 @@ const TAB_CONFIG: Record<string, { label: string; icon: LucideIcon }> = {
   profile: { label: 'Profil', icon: User },
 };
 
-const BAR_HEIGHT = 64;
+const BAR_HEIGHT = FLOATING_TAB_BAR_HEIGHT;
 const PILL_INSET = 6;
 
 /**
@@ -36,6 +42,12 @@ export function GlassTabBar({ state, navigation }: BottomTabBarProps) {
   const [barWidth, setBarWidth] = useState(0);
   const tabWidth = barWidth / state.routes.length;
   const translateX = useSharedValue(0);
+  const setGeometry = useTabBarGeometryStore((state) => state.setGeometry);
+
+  const bottomOffset = Math.max(
+    FLOATING_TAB_BAR_MIN_BOTTOM_OFFSET,
+    insets.bottom + FLOATING_TAB_BAR_SAFE_AREA_GAP
+  );
 
   useEffect(() => {
     if (barWidth > 0) {
@@ -47,22 +59,31 @@ export function GlassTabBar({ state, navigation }: BottomTabBarProps) {
     transform: [{ translateX: translateX.value }],
   }));
 
-  const handleLayout = (event: LayoutChangeEvent) => {
+  const handleRowLayout = (event: LayoutChangeEvent) => {
     setBarWidth(event.nativeEvent.layout.width);
+  };
+
+  // Reports the bar's true rendered footprint (bottom offset + actual measured
+  // height, not the assumed BAR_HEIGHT constant) so screen content can reserve
+  // exactly that much space, regardless of any platform-specific rendering
+  // quirk in GlassContainer/BlurView that might make it differ from 64px.
+  const handleWrapperLayout = (event: LayoutChangeEvent) => {
+    setGeometry(event.nativeEvent.layout.height, bottomOffset);
   };
 
   return (
     <View
       pointerEvents="box-none"
+      onLayout={handleWrapperLayout}
       style={{
         position: 'absolute',
         left: 16,
         right: 16,
-        bottom: Math.max(24, insets.bottom + 12),
+        bottom: bottomOffset,
       }}
     >
       <GlassContainer style={{ height: BAR_HEIGHT, ...shadow.floating }}>
-        <View onLayout={handleLayout} className="flex-1 flex-row items-center">
+        <View onLayout={handleRowLayout} className="flex-1 flex-row items-center">
           {barWidth > 0 && (
             <Animated.View
               pointerEvents="none"

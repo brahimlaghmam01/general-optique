@@ -19,6 +19,7 @@ import { Eye, EyeOff, type LucideIcon } from 'lucide-react-native';
 
 import { IconButton } from '@/components/ui/IconButton';
 import { colors } from '@/theme/colors';
+import { radius } from '@/theme/spacing';
 
 export interface TextFieldProps
   extends Pick<
@@ -92,46 +93,49 @@ export const TextField = forwardRef<TextInput, TextFieldProps>(function TextFiel
     <View className="gap-1.5">
       <Text className="text-text-secondary text-xs font-medium">{label}</Text>
 
-      <Animated.View
-        style={[{ borderWidth: 1.5 }, borderAnimatedStyle]}
-        className="flex-row items-center gap-2 rounded-xl bg-background-secondary px-4"
-      >
-        {LeftIcon && <LeftIcon size={18} color={colors.text.tertiary} />}
-        <TextInput
-          ref={ref}
-          value={value}
-          onChangeText={onChangeText}
-          placeholder={placeholder}
-          placeholderTextColor={colors.text.tertiary}
-          secureTextEntry={showAsSecure}
-          keyboardType={keyboardType}
-          editable={editable}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-          className="text-text-primary flex-1 py-3.5 text-sm"
-          style={WEB_NO_OUTLINE_STYLE}
-          accessibilityLabel={label}
-          accessibilityHint={error}
-          {...inputProps}
-        />
-        {isPassword && (
-          <IconButton
-            icon={isPasswordVisible ? EyeOff : Eye}
-            variant="ghost"
-            size="sm"
-            onPress={() => setIsPasswordVisible((visible) => !visible)}
-            accessibilityLabel={isPasswordVisible ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
-          />
-        )}
-        {!isPassword && RightIcon && (
-          <IconButton
-            icon={RightIcon}
-            variant="ghost"
-            size="sm"
-            onPress={onPressRightIcon ?? (() => {})}
+      {/* className must live on a plain View, not alongside an animated `style` on the
+          same Animated.View — see src/theme/nativewindInterop.ts. `borderRadius` is
+          mirrored onto this outer border box so it aligns with the inner rounded-xl
+          background instead of showing square corners around a rounded fill. */}
+      <Animated.View style={[{ borderWidth: 1.5, borderRadius: radius.xl }, borderAnimatedStyle]}>
+        <View className="flex-row items-center gap-2 rounded-xl bg-background-secondary px-4">
+          {LeftIcon && <LeftIcon size={18} color={colors.text.tertiary} />}
+          <TextInput
+            ref={ref}
+            value={value}
+            onChangeText={onChangeText}
+            placeholder={placeholder}
+            placeholderTextColor={colors.text.tertiary}
+            secureTextEntry={showAsSecure}
+            keyboardType={keyboardType}
+            editable={editable}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            className="text-text-primary flex-1 py-3.5 text-sm"
+            style={WEB_NO_OUTLINE_STYLE}
             accessibilityLabel={label}
+            accessibilityHint={error}
+            {...inputProps}
           />
-        )}
+          {isPassword && (
+            <IconButton
+              icon={isPasswordVisible ? EyeOff : Eye}
+              variant="ghost"
+              size="sm"
+              onPress={() => setIsPasswordVisible((visible) => !visible)}
+              accessibilityLabel={isPasswordVisible ? 'Masquer le mot de passe' : 'Afficher le mot de passe'}
+            />
+          )}
+          {!isPassword && RightIcon && (
+            <IconButton
+              icon={RightIcon}
+              variant="ghost"
+              size="sm"
+              onPress={onPressRightIcon ?? (() => {})}
+              accessibilityLabel={label}
+            />
+          )}
+        </View>
       </Animated.View>
 
       {error && (

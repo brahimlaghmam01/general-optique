@@ -89,30 +89,34 @@ function StoreRow({
       accessibilityState={{ checked: isSelected }}
       accessibilityLabel={store.shortName}
     >
-      <Animated.View style={animatedStyle} className={containerClassName}>
-        <Icon
-          size={18}
-          color={isSelected ? colors.primary[500] : colors.text.tertiary}
-          fill={isSelected && store.tag ? colors.primary[500] : 'none'}
-        />
-        <View className="flex-1 gap-1">
-          <View className="flex-row items-center gap-2">
-            <Text className="text-text-primary text-sm font-semibold">{store.shortName}</Text>
-            {store.tag && <Badge label={store.tag} variant="brand" size="sm" />}
+      {/* className must live on a plain View, not alongside an animated `style` on the
+          same Animated.View — see src/theme/nativewindInterop.ts. */}
+      <Animated.View style={animatedStyle}>
+        <View className={containerClassName}>
+          <Icon
+            size={18}
+            color={isSelected ? colors.primary[500] : colors.text.tertiary}
+            fill={isSelected && store.tag ? colors.primary[500] : 'none'}
+          />
+          <View className="flex-1 gap-1">
+            <View className="flex-row items-center gap-2">
+              <Text className="text-text-primary text-sm font-semibold">{store.shortName}</Text>
+              {store.tag && <Badge label={store.tag} variant="brand" size="sm" />}
+            </View>
+            <Text className="text-text-secondary text-xs">
+              {store.addressLine} · {store.distanceLabel}
+            </Text>
+            <Text className="text-text-tertiary text-xs">{store.hoursLabel}</Text>
           </View>
-          <Text className="text-text-secondary text-xs">
-            {store.addressLine} · {store.distanceLabel}
-          </Text>
-          <Text className="text-text-tertiary text-xs">{store.hoursLabel}</Text>
-        </View>
-        <View
-          className={
-            isSelected
-              ? 'h-5 w-5 items-center justify-center rounded-full border-2 border-primary-500'
-              : 'h-5 w-5 items-center justify-center rounded-full border-2 border-border-medium'
-          }
-        >
-          {isSelected && <View className="h-2.5 w-2.5 rounded-full bg-primary-500" />}
+          <View
+            className={
+              isSelected
+                ? 'h-5 w-5 items-center justify-center rounded-full border-2 border-primary-500'
+                : 'h-5 w-5 items-center justify-center rounded-full border-2 border-border-medium'
+            }
+          >
+            {isSelected && <View className="h-2.5 w-2.5 rounded-full bg-primary-500" />}
+          </View>
         </View>
       </Animated.View>
     </Pressable>

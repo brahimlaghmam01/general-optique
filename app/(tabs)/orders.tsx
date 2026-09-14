@@ -12,7 +12,9 @@ import { OrderHistoryCard } from '@/components/features/orders/OrderHistoryCard'
 import { OrdersHeader } from '@/components/features/orders/OrdersHeader';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { mockActiveOrder, mockLensRenewal, mockPastOrders } from '@/constants/mockData';
+import { useTabBarContentInset } from '@/hooks/useTabBarContentInset';
 import { colors } from '@/theme/colors';
+import { spacing } from '@/theme/spacing';
 import type { Order } from '@/types/order';
 import type { PastOrder } from '@/types/orderHistory';
 
@@ -24,6 +26,7 @@ const activeOrder: Order | null = mockActiveOrder;
 export default function CommandesScreen() {
   const router = useRouter();
   const [refreshing, setRefreshing] = useState(false);
+  const tabBarInset = useTabBarContentInset();
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -43,7 +46,12 @@ export default function CommandesScreen() {
     <SafeAreaView edges={['top']} className="flex-1 bg-background-primary">
       <ScrollView
         className="flex-1"
-        contentContainerClassName="gap-8 px-6 pb-36 pt-6"
+        contentContainerStyle={{
+          gap: spacing['3xl'],
+          paddingHorizontal: spacing['2xl'],
+          paddingTop: spacing['2xl'],
+          paddingBottom: tabBarInset,
+        }}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl

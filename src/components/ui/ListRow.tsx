@@ -73,8 +73,10 @@ export function ListRow({
       accessibilityRole="button"
       accessibilityLabel={title}
     >
-      <Animated.View style={animatedStyle} className="flex-row items-center gap-3 py-3">
-        {content}
+      {/* className must live on a plain View, not alongside an animated `style` on the
+          same Animated.View — see src/theme/nativewindInterop.ts. */}
+      <Animated.View style={animatedStyle}>
+        <View className="flex-row items-center gap-3 py-3">{content}</View>
       </Animated.View>
     </Pressable>
   );

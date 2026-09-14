@@ -1,5 +1,5 @@
 import { Pressable, Text, View } from 'react-native';
-import { Bell, Glasses, SlidersHorizontal } from 'lucide-react-native';
+import { Bell, Glasses } from 'lucide-react-native';
 
 import { Avatar } from '@/components/ui/Avatar';
 import { IconButton } from '@/components/ui/IconButton';
@@ -11,7 +11,6 @@ export interface HomeHeaderProps {
   avatarUrl?: string;
   hasUnreadNotifications?: boolean;
   onPressNotifications?: () => void;
-  onPressFilters?: () => void;
   onPressAvatar?: () => void;
 }
 
@@ -22,7 +21,6 @@ export function HomeHeader({
   avatarUrl,
   hasUnreadNotifications = true,
   onPressNotifications,
-  onPressFilters,
   onPressAvatar,
 }: HomeHeaderProps) {
   return (
@@ -65,30 +63,12 @@ export function HomeHeader({
         </View>
       </View>
 
-      <View className="flex-row items-center justify-between">
-        <Text
-          className="text-text-primary text-2xl"
-          style={{ fontFamily: 'InstrumentSerif_400Regular' }}
-        >
-          Bonjour, {firstName} 👋
-        </Text>
-        <View className="flex-row items-center gap-2">
-          <IconButton
-            icon={Bell}
-            variant="ghost"
-            size="sm"
-            onPress={onPressNotifications ?? (() => {})}
-            accessibilityLabel="Notifications"
-          />
-          <IconButton
-            icon={SlidersHorizontal}
-            variant="ghost"
-            size="sm"
-            onPress={onPressFilters ?? (() => {})}
-            accessibilityLabel="Filtres"
-          />
-        </View>
-      </View>
+      <Text
+        className="text-text-primary text-2xl"
+        style={{ fontFamily: 'InstrumentSerif_400Regular' }}
+      >
+        Bonjour, {firstName} 👋
+      </Text>
     </View>
   );
 }

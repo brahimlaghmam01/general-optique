@@ -78,11 +78,12 @@ export const IconButton = forwardRef<View, IconButtonProps>(function IconButton(
       accessibilityLabel={accessibilityLabel}
       accessibilityState={{ disabled }}
     >
-      <Animated.View
-        style={[{ width: dimension, height: dimension }, animatedStyle]}
-        className={containerClassName}
-      >
-        <Icon size={ICON_SIZE[size]} color={iconColor} />
+      {/* className must live on a plain View, not alongside an animated `style` on the
+          same Animated.View — see src/theme/nativewindInterop.ts. */}
+      <Animated.View style={[{ width: dimension, height: dimension }, animatedStyle]}>
+        <View className={containerClassName} style={{ width: dimension, height: dimension }}>
+          <Icon size={ICON_SIZE[size]} color={iconColor} />
+        </View>
       </Animated.View>
     </Pressable>
   );

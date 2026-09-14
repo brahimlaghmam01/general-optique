@@ -46,18 +46,27 @@ function guessMotifId(currentMotifText: string): string {
 
 export default function BookAppointmentScreen() {
   const router = useRouter();
-  const params = useLocalSearchParams<{ mode?: string; storeId?: string }>();
+  const params = useLocalSearchParams<{ mode?: string; storeId?: string; motifId?: string }>();
   const isReschedule = params.mode === 'reschedule';
 
   const currentAppointment = useAppointmentStore((state) => state.appointment);
   const confirmBooking = useAppointmentStore((state) => state.confirmBooking);
   const joinWaitlist = useAppointmentStore((state) => state.joinWaitlist);
 
-  const [step, setStep] = useState(isReschedule ? 2 : 0);
+  // Reschedule and a Boutique-style "I already know what I want" entry both
+  // skip ahead past steps whose answer is already known — never reset choices
+  // the caller already made.
+  const [step, setStep] = useState(() => {
+    if (isReschedule || params.storeId) return 2;
+    if (params.motifId) return 1;
+    return 0;
+  });
   const [direction, setDirection] = useState<'forward' | 'backward'>('forward');
-  const [motifId, setMotifId] = useState(() =>
-    isReschedule && currentAppointment ? guessMotifId(currentAppointment.motif) : mockVisitMotifs[0].id
-  );
+  const [motifId, setMotifId] = useState(() => {
+    if (params.motifId) return params.motifId;
+    if (isReschedule && currentAppointment) return guessMotifId(currentAppointment.motif);
+    return mockVisitMotifs[0].id;
+  });
   const [storeId, setStoreId] = useState(params.storeId ?? mockStores[0].id);
   const [slotId, setSlotId] = useState(mockTimeSlots[0].id);
   const [isWaitlisted, setIsWaitlisted] = useState(false);

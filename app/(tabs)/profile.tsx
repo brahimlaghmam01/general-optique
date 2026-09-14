@@ -17,8 +17,10 @@ import { SecuritySection } from '@/components/features/profile/SecuritySection';
 import { BottomSheet } from '@/components/ui/BottomSheet';
 import { Button } from '@/components/ui/Button';
 import { mockSecuritySettings, mockUser } from '@/constants/mockData';
+import { useTabBarContentInset } from '@/hooks/useTabBarContentInset';
 import { useAuthStore } from '@/stores/authStore';
 import { colors } from '@/theme/colors';
+import { spacing } from '@/theme/spacing';
 
 const REFRESH_DURATION_MS = 1000;
 
@@ -27,6 +29,7 @@ export default function ProfileScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [isBiometricHardwareAvailable, setIsBiometricHardwareAvailable] = useState(false);
   const logoutSheetRef = useRef<GorhomBottomSheet>(null);
+  const tabBarInset = useTabBarContentInset();
 
   const user = useAuthStore((state) => state.user) ?? mockUser;
   const isBiometricEnabled = useAuthStore((state) => state.isBiometricEnabled);
@@ -56,7 +59,12 @@ export default function ProfileScreen() {
     <SafeAreaView edges={['top']} className="flex-1 bg-background-primary">
       <ScrollView
         className="flex-1"
-        contentContainerClassName="gap-8 px-6 pb-36 pt-6"
+        contentContainerStyle={{
+          gap: spacing['3xl'],
+          paddingHorizontal: spacing['2xl'],
+          paddingTop: spacing['2xl'],
+          paddingBottom: tabBarInset,
+        }}
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl

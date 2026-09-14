@@ -100,24 +100,29 @@ function SlotCard({
       accessibilityState={{ checked: isSelected }}
       accessibilityLabel={`${slot.dayLabel} ${slot.time} avec ${slot.practitioner}`}
     >
-      <Animated.View style={animatedStyle} className={containerClassName}>
-        <Text
-          className={
-            isSelected
-              ? 'text-[10px] font-semibold uppercase tracking-wider text-white/80'
-              : 'text-text-tertiary text-[10px] font-semibold uppercase tracking-wider'
-          }
-        >
-          {slot.dayLabel}
-        </Text>
-        <Text
-          className={isSelected ? 'text-base font-semibold text-white' : 'text-text-primary text-base font-semibold'}
-        >
-          {slot.time}
-        </Text>
-        <Text className={isSelected ? 'text-[11px] text-white/80' : 'text-text-tertiary text-[11px]'}>
-          {slot.practitioner}
-        </Text>
+      {/* className must live on a plain View, not alongside an animated `style` on the
+          same Animated.View — see src/theme/nativewindInterop.ts. `flex:1` is replicated
+          inline since the className carrying `flex-1` moved to the inner View. */}
+      <Animated.View style={[{ flex: 1 }, animatedStyle]}>
+        <View className={containerClassName}>
+          <Text
+            className={
+              isSelected
+                ? 'text-[10px] font-semibold uppercase tracking-wider text-white/80'
+                : 'text-text-tertiary text-[10px] font-semibold uppercase tracking-wider'
+            }
+          >
+            {slot.dayLabel}
+          </Text>
+          <Text
+            className={isSelected ? 'text-base font-semibold text-white' : 'text-text-primary text-base font-semibold'}
+          >
+            {slot.time}
+          </Text>
+          <Text className={isSelected ? 'text-[11px] text-white/80' : 'text-text-tertiary text-[11px]'}>
+            {slot.practitioner}
+          </Text>
+        </View>
       </Animated.View>
     </Pressable>
   );

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import type { DimensionValue } from 'react-native';
+import { View, type DimensionValue } from 'react-native';
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -34,11 +34,14 @@ export function Skeleton({ width = '100%', height = 16, rounded = 'rounded-md' }
   const animatedStyle = useAnimatedStyle(() => ({ opacity: opacity.value }));
 
   return (
+    // className must live on a plain View, not alongside an animated `style` on the
+    // same Animated.View — see src/theme/nativewindInterop.ts.
     <Animated.View
-      className={`bg-border-light ${rounded}`}
       style={[{ width, height }, animatedStyle]}
       accessibilityElementsHidden
       importantForAccessibility="no-hide-descendants"
-    />
+    >
+      <View className={`h-full w-full bg-border-light ${rounded}`} />
+    </Animated.View>
   );
 }

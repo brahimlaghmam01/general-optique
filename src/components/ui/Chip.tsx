@@ -62,9 +62,13 @@ export const Chip = forwardRef<View, ChipProps>(function Chip(
       accessibilityLabel={label}
       accessibilityState={{ selected: active }}
     >
-      <Animated.View style={animatedStyle} className={containerClassName}>
-        {icon}
-        <Text className={labelClassName}>{label}</Text>
+      {/* className must live on a plain View, not alongside an animated `style` on the
+          same Animated.View — see src/theme/nativewindInterop.ts. */}
+      <Animated.View style={animatedStyle}>
+        <View className={containerClassName}>
+          {icon}
+          <Text className={labelClassName}>{label}</Text>
+        </View>
       </Animated.View>
     </Pressable>
   );

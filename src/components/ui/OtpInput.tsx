@@ -10,6 +10,7 @@ import Animated, {
 
 import { colors } from '@/theme/colors';
 import { SPRING_PRESS } from '@/theme/motion';
+import { radius } from '@/theme/spacing';
 
 export interface OtpInputProps {
   length?: number;
@@ -56,15 +57,19 @@ export function OtpInput({ length = 6, onComplete, hasError = false, autoFocus =
 
   return (
     <Pressable onPress={() => inputRef.current?.focus()} accessibilityRole="none">
-      <Animated.View style={shakeStyle} className="flex-row gap-2">
-        {Array.from({ length }).map((_, index) => (
-          <DigitBox
-            key={index}
-            digit={value[index]}
-            isActive={index === value.length}
-            hasError={hasError}
-          />
-        ))}
+      {/* className must live on a plain View, not alongside an animated `style` on the
+          same Animated.View — see src/theme/nativewindInterop.ts. */}
+      <Animated.View style={shakeStyle}>
+        <View className="flex-row gap-2">
+          {Array.from({ length }).map((_, index) => (
+            <DigitBox
+              key={index}
+              digit={value[index]}
+              isActive={index === value.length}
+              hasError={hasError}
+            />
+          ))}
+        </View>
       </Animated.View>
       <TextInput
         ref={inputRef}
@@ -106,16 +111,21 @@ function DigitBox({
       : colors.border.light;
 
   return (
+    // className must live on a plain View, not alongside an animated `style` on the
+    // same Animated.View — see src/theme/nativewindInterop.ts. `flex:1` and
+    // `borderRadius` are replicated inline so the row-sharing and the rounded
+    // border/background stay aligned once className moves to the inner View.
     <Animated.View
-      style={[{ height: 56, borderWidth: 2, borderColor }, style]}
-      className="flex-1 items-center justify-center rounded-xl bg-background-secondary"
+      style={[{ flex: 1, height: 56, borderWidth: 2, borderColor, borderRadius: radius.xl }, style]}
     >
-      <Text
-        className="text-text-primary text-xl font-semibold"
-        style={{ fontFamily: 'JetBrainsMono_400Regular' }}
-      >
-        {digit ?? ''}
-      </Text>
+      <View className="flex-1 items-center justify-center rounded-xl bg-background-secondary">
+        <Text
+          className="text-text-primary text-xl font-semibold"
+          style={{ fontFamily: 'JetBrainsMono_400Regular' }}
+        >
+          {digit ?? ''}
+        </Text>
+      </View>
     </Animated.View>
   );
 }

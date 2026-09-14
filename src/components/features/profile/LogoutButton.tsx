@@ -1,4 +1,4 @@
-import { Pressable, Text } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { LogOut } from 'lucide-react-native';
 
@@ -28,12 +28,14 @@ export function LogoutButton({ onPress }: LogoutButtonProps) {
       accessibilityRole="button"
       accessibilityLabel="Déconnexion du compte"
     >
-      <Animated.View
-        style={animatedStyle}
-        className="w-full flex-row items-center justify-center gap-2 rounded-xl bg-error/10 py-3.5"
-      >
-        <LogOut size={16} color={colors.error} />
-        <Text className="text-sm font-semibold text-error">Déconnexion du compte</Text>
+      {/* className must live on a plain View, not alongside an animated `style` on the
+          same Animated.View — see src/theme/nativewindInterop.ts. `width:100%` is
+          replicated inline since `w-full` can no longer sit in that className. */}
+      <Animated.View style={[{ width: '100%' }, animatedStyle]}>
+        <View className="w-full flex-row items-center justify-center gap-2 rounded-xl bg-error/10 py-3.5">
+          <LogOut size={16} color={colors.error} />
+          <Text className="text-sm font-semibold text-error">Déconnexion du compte</Text>
+        </View>
       </Animated.View>
     </Pressable>
   );

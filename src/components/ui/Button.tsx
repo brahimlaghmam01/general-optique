@@ -157,16 +157,21 @@ export const Button = forwardRef<View, ButtonProps>(function Button(
       accessibilityState={{ disabled: isDisabled, busy: loading }}
       {...pressableProps}
     >
-      <Animated.View style={animatedStyle} className={containerClassName}>
-        {loading ? (
-          <ActivityIndicator size="small" color={spinnerColor} />
-        ) : (
-          <>
-            {Icon && iconPosition === 'left' && <Icon size={ICON_SIZE[size]} color={iconColor} />}
-            <Text className={labelClassName}>{label}</Text>
-            {Icon && iconPosition === 'right' && <Icon size={ICON_SIZE[size]} color={iconColor} />}
-          </>
-        )}
+      {/* className must live on a plain View, never alongside an animated `style` on the
+          same Animated.View — see src/theme/nativewindInterop.ts for why that silently
+          drops one of the two on native. */}
+      <Animated.View style={animatedStyle}>
+        <View className={containerClassName}>
+          {loading ? (
+            <ActivityIndicator size="small" color={spinnerColor} />
+          ) : (
+            <>
+              {Icon && iconPosition === 'left' && <Icon size={ICON_SIZE[size]} color={iconColor} />}
+              <Text className={labelClassName}>{label}</Text>
+              {Icon && iconPosition === 'right' && <Icon size={ICON_SIZE[size]} color={iconColor} />}
+            </>
+          )}
+        </View>
       </Animated.View>
     </Pressable>
   );

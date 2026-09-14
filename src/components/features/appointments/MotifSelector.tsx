@@ -82,22 +82,26 @@ function MotifRow({
       accessibilityState={{ checked: isSelected }}
       accessibilityLabel={motif.label}
     >
-      <Animated.View style={animatedStyle} className={containerClassName}>
-        <View className="h-9 w-9 items-center justify-center rounded-lg bg-background-tertiary">
-          <Icon size={18} color={colors.primary[500]} />
-        </View>
-        <View className="flex-1 gap-1">
-          <View className="flex-row items-center justify-between gap-2">
-            <Text className="text-text-primary flex-1 text-sm font-semibold">{motif.label}</Text>
-            <Text className="text-text-tertiary text-xs">{motif.durationMinutes} min</Text>
+      {/* className must live on a plain View, not alongside an animated `style` on the
+          same Animated.View — see src/theme/nativewindInterop.ts. */}
+      <Animated.View style={animatedStyle}>
+        <View className={containerClassName}>
+          <View className="h-9 w-9 items-center justify-center rounded-lg bg-background-tertiary">
+            <Icon size={18} color={colors.primary[500]} />
           </View>
-          <Text className="text-text-secondary text-xs">{motif.description}</Text>
-        </View>
-        {isSelected && (
-          <View className="h-5 w-5 items-center justify-center rounded-full bg-primary-500">
-            <Check size={12} color="#FFFFFF" />
+          <View className="flex-1 gap-1">
+            <View className="flex-row items-center justify-between gap-2">
+              <Text className="text-text-primary flex-1 text-sm font-semibold">{motif.label}</Text>
+              <Text className="text-text-tertiary text-xs">{motif.durationMinutes} min</Text>
+            </View>
+            <Text className="text-text-secondary text-xs">{motif.description}</Text>
           </View>
-        )}
+          {isSelected && (
+            <View className="h-5 w-5 items-center justify-center rounded-full bg-primary-500">
+              <Check size={12} color="#FFFFFF" />
+            </View>
+          )}
+        </View>
       </Animated.View>
     </Pressable>
   );
